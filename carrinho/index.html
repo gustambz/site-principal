@@ -25,20 +25,22 @@
         .product-cell { display: flex; align-items: center; gap: 15px; }
         .product-icon { width: 45px; height: 45px; background: #0066ff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .product-title { font-weight: bold; color: #111827; font-size: 15px; }
-        .product-code { font-size: 12px; color: #9ca3af; margin-top: 2px; }
         
         .btn-remove { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 14px; text-decoration: underline; }
         .btn-remove:hover { color: #ef4444; }
         .price-text { font-weight: bold; color: #111827; font-size: 15px; }
 
-        /* Sidebar e Totais */
+        /* Sidebar Cupom e Totais */
+        .coupon-section { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; }
+        .coupon-input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; background-color: #f9fafb; color: #4b5563; font-weight: 600; }
+        
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #4b5563; }
         .summary-total { border-top: 1px solid #e5e7eb; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-start; }
         .total-price-box { text-align: right; }
-        .main-total-price { font-size: 24px; color: #0066ff; font-weight: 900; }
+        .main-total-price { font-size: 26px; color: #111827; font-weight: 900; }
         
-        .btn-next-step { display: block; width: 100%; text-align: center; background: #0066ff; color: white !important; font-weight: bold; padding: 14px; border-radius: 4px; text-decoration: none; margin-top: 20px; font-size: 16px; border: none; cursor: pointer; transition: background 0.2s; }
-        .btn-next-step:hover { background: #0055cc; }
+        .btn-next-step { display: block; width: 100%; text-align: center; background: #0055ff; color: white !important; font-weight: bold; padding: 14px; border-radius: 4px; text-decoration: none; margin-top: 20px; font-size: 16px; border: none; cursor: pointer; }
+        .btn-next-step:hover { background: #0044cc; }
         
         .payment-icons { display: flex; justify-content: center; gap: 8px; margin-top: 20px; font-size: 12px; color: #9ca3af; }
     </style>
@@ -82,22 +84,31 @@
         </div>
 
         <div class="cart-sidebar" id="sidebar-wrapper">
-            <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #111827;">Resumo do investimento</h3>
+            <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 5px;">
+                <span>🎫</span> Cupom aplicado
+            </div>
+            <div class="coupon-section">
+                <input type="text" class="coupon-input" id="coupon-field" value="NENHUM" readonly>
+            </div>
 
             <div class="summary-row">
-                <span>Valor do Curso</span>
-                <span style="font-weight: bold;" id="subtotal-value">R$ 89,90</span>
+                <span>Subtotal</span>
+                <span style="font-weight: bold; text-decoration: line-through; color: #9ca3af;">R$ 600,00</span>
             </div>
             <div class="summary-row">
-                <span>Tipo de plano</span>
-                <span style="color: #6b7280;">Mensal Universitário</span>
+                <span>Cupom utilizado</span>
+                <span style="color: #111827; font-weight: bold;" id="summary-coupon-name">NENHUM</span>
+            </div>
+            <div class="summary-row" style="color: #22c55e;">
+                <span>Desconto cupom</span>
+                <span style="font-weight: bold;" id="summary-discount-value">- R$ 0,00</span>
             </div>
 
             <div class="summary-total">
-                <span style="font-size: 16px; font-weight: bold; color: #111827;">Total</span>
+                <span style="font-size: 18px; font-weight: bold; color: #111827;">Total</span>
                 <div class="total-price-box">
-                    <div class="main-total-price" id="total-value">R$ 89,90<span style="font-size: 12px; font-color: #6b7280; font-weight: normal;">/mês</span></div>
-                    <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">Recorrência Mensal sem juros</div>
+                    <div class="main-total-price" id="summary-total-text">R$ 600,00</div>
+                    <div style="font-size: 12px; color: #6b7280; margin-top: 2px;" id="summary-subtext">ou à vista com preço regular</div>
                 </div>
             </div>
 
@@ -106,7 +117,7 @@
             <a href="https://cursos.meuanalytics.com.br/" style="display: block; text-align: center; margin-top: 15px; color: #6b7280; font-size: 14px; text-decoration: none; font-weight: bold;">+ Adicionar mais cursos</a>
             
             <div class="payment-icons">
-                <span>💳 Cartão de Crédito • Pix • Boleto</span>
+                <span>💳 Visa • Mastercard • Elo • Pix • Boleto</span>
             </div>
         </div>
     </main>
@@ -116,23 +127,63 @@
     </footer>
 
     <script>
+        // Banco de dados em memória mapeando os nomes limpos e exatos das páginas de vendas
         const cursosDisponiveis = {
-            'analytics-gestao': { nome: 'LABS - Analytics para Gestão - 1º Período', codigo: '145815' },
-            'ga4': { nome: 'LABS - Google Analytics 4 (GA4) - 1º Período', codigo: '145816' },
-            'gtm': { nome: 'LABS - Google Tag Manager (GTM) - 1º Período', codigo: '145817' }
+            'analytics-gestao': { nome: 'Analytics para Gestão' },
+            'ga4': { nome: 'Google Analytics 4 (GA4)' },
+            'gtm': { nome: 'Google Tag Manager (GTM)' }
         };
 
+        // Captura os parâmetros passados pelas páginas de vendas (ex: ?curso=ga4&cupom=DESCONTOSOCIAL)
         const urlParams = new URLSearchParams(window.location.search);
         let cursoId = urlParams.get('curso');
+        let cupomId = urlParams.get('cupom');
 
+        // Fallback preventivo para testes diretos na URL
         if (!cursoId) cursoId = 'analytics-gestao';
+        if (!cupomId) cupomId = 'DESCONTOSOCIAL';
 
         const tableBody = document.getElementById('cart-table-body');
         const curso = cursosDisponiveis[cursoId] || cursosDisponiveis['analytics-gestao'];
 
-        // Alimenta a sessão para persistir no checkout
-        sessionStorage.setItem('item_no_carrinho', JSON.stringify({ id: cursoId, ...curso, preco: '89.90' }));
+        // Lógica de cálculo matemático do cupom de desconto com base em R$ 600,00
+        let desconto = 0;
+        let textoPrecoTotal = "";
+        let subtextoPreco = "";
+        let precoFinalSalvar = 0;
 
+        if (cupomId === 'EXALUNO') {
+            desconto = 90.60;
+            precoFinalSalvar = 509.40;
+            textoPrecoTotal = "6x de R$ 84,90";
+            subtextoPreco = "ou à vista por R$ 509,40";
+        } else {
+            // Padrão ou DESCONTOSOCIAL
+            cupomId = 'DESCONTOSOCIAL';
+            desconto = 60.60;
+            precoFinalSalvar = 539.40;
+            textoPrecoTotal = "6x de R$ 89,90";
+            subtextoPreco = "ou à vista por R$ 539,40";
+        }
+
+        // Atualização dos componentes visuais do resumo
+        document.getElementById('coupon-field').value = cupomId;
+        document.getElementById('summary-coupon-name').innerText = cupomId;
+        document.getElementById('summary-discount-value').innerText = `- R$ ${desconto.toFixed(2).replace('.', ',')}`;
+        document.getElementById('summary-total-text').innerText = textoPrecoTotal;
+        document.getElementById('summary-subtext').innerText = subtextoPreco;
+
+        // Armazenamento estruturado na sessão para o restante do checkout e GTM lerem futuramente
+        sessionStorage.setItem('item_no_carrinho', JSON.stringify({
+            id: cursoId,
+            nome: curso.nome,
+            preco_original: 600.00,
+            preco_final: precoFinalSalvar,
+            cupom: cupomId,
+            texto_parcela: textoPrecoTotal
+        }));
+
+        // Renderização limpa da linha da tabela (sem códigos vazios ou textos irrelevantes)
         tableBody.innerHTML = `
             <tr>
                 <td>
@@ -140,14 +191,13 @@
                         <div class="product-icon">💼</div>
                         <div>
                             <div class="product-title">${curso.nome}</div>
-                            <div class="product-code">Código: ${curso.codigo}</div>
                         </div>
                     </div>
                 </td>
                 <td style="text-align: center;">
                     <button class="btn-remove" onclick="clearCart()">Remover</button>
                 </td>
-                <td style="text-align: right;" class="price-text">R$ 89,90</td>
+                <td style="text-align: right;" class="price-text">R$ 600,00</td>
             </tr>
         `;
 
@@ -155,8 +205,10 @@
             sessionStorage.removeItem('item_no_carrinho');
             document.getElementById('items-count-title').innerText = "0 cursos no carrinho";
             document.getElementById('cart-table-wrapper').innerHTML = `<div style="padding: 40px; text-align: center; color: #9ca3af;">Seu carrinho está vazio.</div>`;
-            document.getElementById('subtotal-value').innerText = "R$ 0,00";
-            document.getElementById('total-value').innerText = "R$ 0,00";
+            document.getElementById('summary-coupon-name').innerText = "NENHUM";
+            document.getElementById('summary-discount-value').innerText = "- R$ 0,00";
+            document.getElementById('summary-total-text').innerText = "R$ 0,00";
+            document.getElementById('summary-subtext').innerText = "Carrinho vazio";
             document.getElementById('sidebar-wrapper').style.opacity = '0.4';
             document.getElementById('sidebar-wrapper').style.pointerEvents = 'none';
         }
@@ -165,7 +217,7 @@
             window.location.href = "https://meuanalytics.com.br/login/";
         }
 
-        // Lógica do cronômetro regressivo
+        // Cronômetro do print
         let duration = 14 * 60 + 57;
         const timerDisplay = document.getElementById('timer');
         setInterval(() => {
