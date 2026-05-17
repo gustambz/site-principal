@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forma de Pagamento | Meu Analytics Labs</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body { background-color: #f3f4f6; color: #333; }
+        .checkout-header { background: #ffffff; padding: 15px 0; border-bottom: 1px solid #e5e7eb; }
+        .checkout-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 30px; }
+        
+        .checkout-main { flex: 2; min-width: 300px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 30px; }
+        .checkout-sidebar { flex: 1; min-width: 300px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 25px; height: fit-content; }
+        
+        .section-title-checkout { font-size: 18px; font-weight: bold; color: #111827; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Abas de Pagamento Estilo Gran */
+        .payment-tabs { display: flex; border-bottom: 2px solid #e5e7eb; margin-bottom: 25px; gap: 10px; }
+        .payment-tab { padding: 12px 20px; font-weight: bold; font-size: 14px; color: #6b7280; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+        .payment-tab.active { color: #0066ff; border-bottom-color: #0066ff; }
+        
+        .payment-method-panel { display: none; }
+        .payment-method-panel.active { display: block; }
+        
+        /* Formulário de Cartão */
+        .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .form-group-checkout { flex: 1; display: flex; flex-direction: column; }
+        .form-group-checkout label { font-size: 13px; font-weight: 600; color: #4b5563; margin-bottom: 6px; }
+        .form-group-checkout input, .form-group-checkout select { padding: 11px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; color: #1f2937; }
+        
+        /* Detalhes da Sidebar */
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #4b5563; }
+        .summary-total-box { border-top: 1px solid #e5e7eb; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .price-large { font-size: 26px; color: #0066ff; font-weight: 900; text-align: right; }
+        
+        .btn-pay-now { width: 100%; background: #22c55e; color: white !important; font-weight: bold; padding: 15px; border-radius: 4px; border: none; font-size: 16px; cursor: pointer; text-align: center; display: block; text-decoration: none; margin-top: 25px; }
+        .btn-pay-now:hover { background: #16a34a; }
+        
+        .pix-qr-mock { border: 2px dashed #cbd5e1; padding: 20px; text-align: center; background: #f9fafb; border-radius: 6px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <header class="checkout-header">
+        <div style="max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo" style="font-size: 20px;"><span class="logo-accent">MEU</span> ANALYTICS <span class="logo-sub">LABS</span></div>
+            <div style="font-size: 13px; color: #6b7280; font-weight: 600;">🔒 Ambiente 100% Seguro</div>
+        </div>
+    </header>
+
+    <main class="checkout-container">
+        
+        <div class="checkout-main">
+            <h2 class="section-title-checkout">💳 Escolha a Forma de Pagamento</h2>
+            
+            <div class="payment-tabs">
+                <button class="payment-tab active" onclick="switchTab('credit-card', this)">Cartão de Crédito</button>
+                <button class="payment-tab" onclick="switchTab('pix', this)">Pix à Vista</button>
+                <button class="payment-tab" onclick="switchTab('boleto', this)">Boleto Bancário</button>
+            </div>
+
+            <div id="panel-credit-card" class="payment-method-panel active">
+                <form id="form-cc" onsubmit="executePurchase(event, 'cartao')">
+                    <div class="form-group-checkout" style="margin-bottom: 15px;">
+                        <label for="cc-num">Número do Cartão</label>
+                        <input type="text" id="cc-num" required placeholder="4000 1234 5678 9010" maxlength="19">
+                    </div>
+                    <div class="form-group-checkout" style="margin-bottom: 15px;">
+                        <label for="cc-name">Nome Impresso no Cartão</label>
+                        <input type="text" id="cc-name" required placeholder="NOME COMO ESTÁ NO CARTÃO">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group-checkout">
+                            <label for="cc-expiry">Validade</label>
+                            <input type="text" id="cc-expiry" required placeholder="MM/AA" maxlength="5">
+                        </div>
+                        <div class="form-group-checkout">
+                            <label for="cc-cvv">Código de Segurança (CVV)</label>
+                            <input type="text" id="cc-cvv" required placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+                    <div class="form-group-checkout" style="margin-top: 10px;">
+                        <label for="cc-installments">Opções de Parcelamento</label>
+                        <select id="cc-installments">
+                            </select>
+                    </div>
+                    <button type="submit" class="btn-pay-now">Finalizar Matrícula com Cartão</button>
+                </form>
+            </div>
+
+            <div id="panel-pix" class="payment-method-panel">
+                <p style="font-size: 14px; color: #4b5563;">O código Pix gerado possui prazo de validade de 15 minutos. A liberação do curso ocorre de forma imediata após o pagamento.</p>
+                <div class="pix-qr-mock">
+                    <div style="font-size: 30px; margin-bottom: 10px;">📱</div>
+                    <strong>O QR Code será gerado na próxima etapa</strong><br>
+                    <span style="font-size: 13px; color: #6b7280;">Basta clicar no botão de fechamento abaixo.</span>
+                </div>
+                <button onclick="executePurchase(event, 'pix')" class="btn-pay-now">Gerar Código Pix e Finalizar</button>
+            </div>
+
+            <div id="panel-boleto" class="payment-method-panel">
+                <p style="font-size: 14px; color: #4b5563;">Atenção: Boletos bancários levam de 1 a 2 dias úteis para compensação bancária. O acesso ao laboratório será liberado após o banco processar o faturamento.</p>
+                <div class="pix-qr-mock" style="border-style: solid; background: #fff;">
+                    <div style="font-size: 30px; margin-bottom: 10px;">📄</div>
+                    <span>Boleto registrado emitido sem taxa de cobrança adicional.</span>
+                </div>
+                <button onclick="executePurchase(event, 'boleto')" class="btn-pay-now">Imprimir Boleto e Finalizar</button>
+            </div>
+
+        </div>
+
+        <div class="checkout-sidebar">
+            <h3 style="font-size: 15px; font-weight: bold; color: #111827; margin-top: 0; margin-bottom: 15px;">Resumo da Compra</h3>
+            
+            <div class="summary-item">
+                <span>Curso Escolhido</span>
+                <span style="font-weight: bold;" id="side-course-name">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Preço Original</span>
+                <span style="text-decoration: line-through; color: #9ca3af;">R$ 600,00</span>
+            </div>
+            <div class="summary-item">
+                <span>Cupom Ativo</span>
+                <span style="color: #111827; font-weight: bold;" id="side-coupon-name">-</span>
+            </div>
+
+            <div class="summary-total-box">
+                <span style="font-size: 16px; font-weight: bold; color: #111827;">Total Devido</span>
+                <div>
+                    <div class="price-large" id="side-total-text">-</div>
+                    <div style="font-size: 11px; color: #9ca3af; text-align: right; margin-top: 2px;" id="side-subtext">-</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="main-footer" style="background: #ffffff; margin-top: 80px; border-top: 1px solid #e5e7eb; padding: 20px 0;">
+        <p>&copy; 2026 Meu Analytics Labs. Simulação acadêmica inspirada em arquiteturas reais de pagamento SaaS.</p>
+    </footer>
+
+    <script>
+        // Carrega as informações dinâmicas salvas na sessão pelo carrinho
+        const itemInfo = JSON.parse(sessionStorage.getItem('item_no_carrinho'));
+
+        // Proteção técnica: Se o usuário tentar acessar a página sem ter itens no carrinho, chuta ele de volta pra vitrine
+        if (!itemInfo) {
+            window.location.href = "https://cursos.meuanalytics.com.br/nossos-cursos/";
+        }
+
+        // Renderiza os dados financeiros na sidebar
+        document.getElementById('side-course-name').innerText = itemInfo.nome;
+        document.getElementById('side-coupon-name').innerText = itemInfo.cupom;
+        document.getElementById('side-total-text').innerText = itemInfo.texto_parcela;
+        
+        const optInstallments = document.getElementById('cc-installments');
+
+        if (itemInfo.cupom === 'EXALUNO') {
+            document.getElementById('side-subtext').innerText = "ou R$ 509,40 à vista";
+            optInstallments.innerHTML = `
+                <option value="6">6x de R$ 84,90 (Sem Juros) - Total: R$ 509,40</option>
+                <option value="1">1x de R$ 509,40 à vista</option>
+            `;
+        } else {
+            document.getElementById('side-subtext').innerText = "ou R$ 539,40 à vista";
+            optInstallments.innerHTML = `
+                <option value="6">6x de R$ 89,90 (Sem Juros) - Total: R$ 539,40</option>
+                <option value="1">1x de R$ 539,40 à vista</option>
+            `;
+        }
+
+        // Alternância de abas de pagamento
+        function switchTab(method, element) {
+            document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.payment-method-panel').forEach(p => p.classList.remove('active'));
+            
+            element.classList.add('active');
+            document.getElementById(`panel-${method}`).classList.add('active');
+        }
+
+        // Finalização do Pedido e Transição para a Página de Sucesso (Obrigado)
+        function executePurchase(event, metodoEscolhido) {
+            event.preventDefault();
+            
+            // Registra a forma de pagamento na sessão para alimentar os dados do evento Purchase do GTM na próxima tela
+            itemInfo.metodo_pagamento = metodoEscolhido;
+            sessionStorage.setItem('item_no_carrinho', JSON.stringify(itemInfo));
+
+            // Dispara para a página de obrigado
+            window.location.href = "https://meuanalytics.com.br/obrigado/index.html";
+        }
+    </script>
+</body>
+</html>
