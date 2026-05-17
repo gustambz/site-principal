@@ -5,34 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Identificação | Meu Analytics Labs</title>
     <link rel="stylesheet" href="../style.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
         body { background-color: #ffffff; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .auth-logo-header { text-align: center; padding: 25px 0; border-bottom: 1px solid #e5e7eb; background: #ffffff; }
-        
         .auth-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: flex; gap: 50px; justify-content: center; align-items: flex-start; }
-        .auth-column { flex: 1; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 35px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); min-width: 300px; position: relative; }
-        
-        .auth-column-title { text-align: center; font-size: 22px; font-weight: bold; color: #111827; margin-bottom: 25px; font-family: inherit; }
+        .auth-column { flex: 1; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 35px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); min-width: 300px; }
+        .auth-column-title { text-align: center; font-size: 22px; font-weight: bold; color: #111827; margin-bottom: 25px; }
         .auth-icon-badge { width: 45px; height: 45px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 20px; color: #0066ff; border: 1px solid #e5e7eb; }
-        
-        /* Inputs Baseados no Print */
         .form-group-auth { margin-bottom: 18px; }
         .form-group-auth label { display: block; font-weight: 600; font-size: 14px; color: #374151; margin-bottom: 6px; }
-        .form-group-auth input { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; color: #1f2937; box-sizing: border-box; transition: border-color 0.2s; }
-        .form-group-auth input:focus { outline: none; border-color: #0066ff; box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1); }
-        
-        /* Botão Azul da Gran */
-        .btn-auth-submit { width: 100%; background: #0066ff; color: #ffffff !important; border: none; padding: 14px; border-radius: 4px; font-weight: bold; font-size: 15px; cursor: pointer; transition: background 0.2s; margin-top: 10px; display: block; text-align: center; text-decoration: none; }
-        .btn-auth-submit:hover { background: #0055cc; }
-        
+        .form-group-auth input { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .btn-auth-submit { width: 100%; background: #0066ff; color: #ffffff !important; border: none; padding: 14px; border-radius: 4px; font-weight: bold; font-size: 15px; cursor: pointer; text-align: center; text-decoration: none; display: block; }
         .social-btn-fake { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-size: 13px; font-weight: 600; color: #4b5563; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; cursor: not-allowed; opacity: 0.8; }
         .social-btn-fake.fb { background: #3b5998; color: white; border: none; }
-
-        .divider-text { text-align: center; margin: 15px 0; color: #9ca3af; font-size: 12px; position: relative; }
-        
+        .divider-text { text-align: center; margin: 15px 0; color: #9ca3af; font-size: 12px; }
         .alert-box-auth { padding: 12px; border-radius: 4px; margin-bottom: 20px; font-size: 14px; display: none; text-align: center; }
         .alert-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
@@ -47,181 +34,102 @@
     </div>
 
     <main class="auth-container">
-        
         <section class="auth-column">
             <div class="auth-icon-badge">🪪</div>
             <h2 class="auth-column-title">Cadastre-se para continuar</h2>
-            
             <button class="social-btn-fake fb">Continuar com Facebook</button>
             <button class="social-btn-fake">🌐 Continuar com Google</button>
-            
             <div class="divider-text">ou preencha os dados abaixo</div>
-            
             <div id="register-alert" class="alert-box-auth"></div>
-            
             <form id="register-form" onsubmit="handleRegister(event)">
                 <div class="form-group-auth">
-                    <label for="reg-name">Nome</label>
+                    <label>Nome</label>
                     <input type="text" id="reg-name" required placeholder="Seu nome completo">
                 </div>
                 <div class="form-group-auth">
-                    <label for="reg-email">E-mail</label>
+                    <label>E-mail</label>
                     <input type="email" id="reg-email" required placeholder="seuemail@exemplo.com">
                 </div>
                 <div class="form-group-auth">
-                    <label for="reg-phone">Celular</label>
+                    <label>Celular</label>
                     <input type="tel" id="reg-phone" required placeholder="(63) 98888-8888">
                 </div>
                 <div class="form-group-auth">
-                    <label for="reg-password">Senha</label>
+                    <label>Senha</label>
                     <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres" minlength="6">
                 </div>
-                <button type="submit" id="btn-submit-register" class="btn-auth-submit">Cadastrar e finalizar pedido</button>
+                <button type="submit" id="btn-submit-register" class="btn-auth-submit">Cadastrar e continuar</button>
             </form>
         </section>
 
         <section class="auth-column">
             <div class="auth-icon-badge">🛡️</div>
             <h2 class="auth-column-title">Se já tiver uma conta, faça seu login</h2>
-            
             <button class="social-btn-fake fb">Continuar com Facebook</button>
             <button class="social-btn-fake">🌐 Continuar com Google</button>
-            
             <div class="divider-text">ou entre com sua conta</div>
-            
             <div id="login-alert" class="alert-box-auth"></div>
-            
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group-auth">
-                    <label for="log-email">E-mail</label>
+                    <label>E-mail</label>
                     <input type="email" id="log-email" required placeholder="seuemail@exemplo.com">
                 </div>
                 <div class="form-group-auth">
-                    <label for="log-password">Senha</label>
+                    <label>Senha</label>
                     <input type="password" id="log-password" required placeholder="Sua senha cadastrada">
                 </div>
-                <button type="submit" id="btn-submit-login" class="btn-auth-submit">Entrar e finalizar pedido</button>
-                <div style="text-align: center; margin-top: 15px; font-size: 13px;">
-                    <a href="#" style="color: #0066ff; text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
-                </div>
+                <button type="submit" id="btn-submit-login" class="btn-auth-submit">Entrar e continuar</button>
             </form>
         </section>
-
     </main>
 
-    <footer class="main-footer" style="background: #f9fafb; border-top: 1px solid #e5e7eb; padding: 25px 0;">
-        <p>&copy; 2026 Meu Analytics Labs. Autenticação simulada baseada em padrões corporativos.</p>
-    </footer>
-
     <script>
-        // Gustavo, mude as duas strings abaixo para conectar o Supabase real quando quiser rodar na nuvem
         const SUPABASE_URL = "SUA_PROJECT_URL_AQUI"; 
         const SUPABASE_ANON_KEY = "SUA_ANON_API_KEY_AQUI";
-        
         const supabase = (SUPABASE_URL !== "SUA_PROJECT_URL_AQUI") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-        // Processa o Registro (Coluna Esquerda)
-        async function handleRegister(event) {
-            event.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const phone = document.getElementById('reg-phone').value;
-            const password = document.getElementById('reg-password').value;
-            const alertBox = document.getElementById('register-alert');
-            const btn = document.getElementById('btn-submit-register');
-
-            alertBox.style.display = 'none';
-
-            // Comportamento Fake Inteligente (Local) caso não tenha colocado as credenciais do Supabase ainda
-            if (!supabase) {
-                alertBox.className = "alert-box auth-alert alert-success";
-                alertBox.innerText = "Conta criada com sucesso (Simulação Local)! Redirecionando...";
-                alertBox.style.display = 'block';
-                
-                // Gera o UUID fictício para o Analytics operar o User ID
-                localStorage.setItem('user_id', 'usr_fake_' + Math.random().toString(36).substr(2, 9));
-                localStorage.setItem('user_email', email);
-                localStorage.setItem('user_cell', phone);
-                
-                setTimeout(() => { window.location.href = "https://meuanalytics.com.br/pagamento/"; }, 1500);
-                return;
-            }
-
-            btn.innerText = "Processando cadastro...";
-            btn.disabled = true;
-
-            try {
-                const { data, error } = await supabase.auth.signUp({ 
-                    email, 
-                    password,
-                    options: { data: { full_name: name, phone_number: phone } }
-                });
-                if (error) throw error;
-
-                alertBox.className = "alert-box auth-alert alert-success";
-                alertBox.innerText = "Cadastro realizado! Redirecionando para o pagamento...";
-                alertBox.style.display = 'block';
-
-                if (data.user) {
-                    localStorage.setItem('user_id', data.user.id);
-                    localStorage.setItem('user_email', data.user.email);
-                    localStorage.setItem('user_cell', phone);
-                }
-                setTimeout(() => { window.location.href = "https://meuanalytics.com.br/pagamento/"; }, 1500);
-            } catch (err) {
-                alertBox.className = "alert-box auth-alert alert-danger";
-                alertBox.innerText = err.message;
-                alertBox.style.display = 'block';
-                btn.disabled = false;
-                btn.innerText = "Cadastrar e finalizar pedido";
+        // Função centralizadora de rotas pós-login
+        function redirectPostAuth() {
+            const temItemNoCarrinho = sessionStorage.getItem('item_no_carrinho');
+            if (temItemNoCarrinho) {
+                // Se tem item comprando, vai para a página de adição de pagamento
+                window.location.href = "https://meuanalytics.com.br/pagamento/index.html";
+            } else {
+                // Se clicou em Entrar seco no menu, volta para a Home oficial de marketing
+                window.location.href = "https://cursos.meuanalytics.com.br/";
             }
         }
 
-        // Processa o Login (Coluna Direita)
+        async function handleRegister(event) {
+            event.preventDefault();
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const alertBox = document.getElementById('register-alert');
+            
+            localStorage.setItem('user_id', 'usr_' + Math.random().toString(36).substr(2, 9));
+            localStorage.setItem('user_email', email);
+            localStorage.setItem('user_cell', phone);
+
+            alertBox.className = "alert-box-auth alert-success";
+            alertBox.innerText = "Conta criada! Direcionando...";
+            alertBox.style.display = 'block';
+            
+            setTimeout(redirectPostAuth, 1000);
+        }
+
         async function handleLogin(event) {
             event.preventDefault();
             const email = document.getElementById('log-email').value;
-            const password = document.getElementById('log-password').value;
             const alertBox = document.getElementById('login-alert');
-            const btn = document.getElementById('btn-submit-login');
 
-            alertBox.style.display = 'none';
+            localStorage.setItem('user_id', 'usr_' + Math.random().toString(36).substr(2, 9));
+            localStorage.setItem('user_email', email);
 
-            if (!supabase) {
-                alertBox.className = "alert-box auth-alert alert-success";
-                alertBox.innerText = "Login efetuado com sucesso (Simulação Local)! Redirecionando...";
-                alertBox.style.display = 'block';
-                
-                localStorage.setItem('user_id', 'usr_fake_login_' + Math.random().toString(36).substr(2, 9));
-                localStorage.setItem('user_email', email);
-                
-                setTimeout(() => { window.location.href = "https://meuanalytics.com.br/pagamento/"; }, 1500);
-                return;
-            }
-
-            btn.innerText = "Autenticando...";
-            btn.disabled = true;
-
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-
-                alertBox.className = "alert-box auth-alert alert-success";
-                alertBox.innerText = "Acesso autorizado! Carregando dados de pagamento...";
-                alertBox.style.display = 'block';
-
-                if (data.user) {
-                    localStorage.setItem('user_id', data.user.id);
-                    localStorage.setItem('user_email', data.user.email);
-                }
-                setTimeout(() => { window.location.href = "https://meuanalytics.com.br/pagamento/"; }, 1500);
-            } catch (err) {
-                alertBox.className = "alert-box auth-alert alert-danger";
-                alertBox.innerText = err.message;
-                alertBox.style.display = 'block';
-                btn.disabled = false;
-                btn.innerText = "Entrar e finalizar pedido";
-            }
+            alertBox.className = "alert-box-auth alert-success";
+            alertBox.innerText = "Acesso autorizado! Direcionando...";
+            alertBox.style.display = 'block';
+            
+            setTimeout(redirectPostAuth, 1000);
         }
     </script>
 </body>
