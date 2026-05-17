@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Identificação | Meu Analytics Labs</title>
     <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background-color: #ffffff; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .auth-logo-header { text-align: center; padding: 25px 0; border-bottom: 1px solid #e5e7eb; background: #ffffff; }
@@ -21,8 +20,7 @@
         .social-btn-fake.fb { background: #3b5998; color: white; border: none; }
         .divider-text { text-align: center; margin: 15px 0; color: #9ca3af; font-size: 12px; }
         .alert-box-auth { padding: 12px; border-radius: 4px; margin-bottom: 20px; font-size: 14px; display: none; text-align: center; }
-        .alert-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; display: block !important; }
     </style>
 </head>
 <body>
@@ -37,8 +35,8 @@
         <section class="auth-column">
             <div class="auth-icon-badge">🪪</div>
             <h2 class="auth-column-title">Cadastre-se para continuar</h2>
-            <button class="social-btn-fake fb">Continuar com Facebook</button>
-            <button class="social-btn-fake">🌐 Continuar com Google</button>
+            <button type="button" class="social-btn-fake fb">Continuar com Facebook</button>
+            <button type="button" class="social-btn-fake">🌐 Continuar com Google</button>
             <div class="divider-text">ou preencha os dados abaixo</div>
             <div id="register-alert" class="alert-box-auth"></div>
             <form id="register-form" onsubmit="handleRegister(event)">
@@ -58,15 +56,15 @@
                     <label>Senha</label>
                     <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres" minlength="6">
                 </div>
-                <button type="submit" id="btn-submit-register" class="btn-auth-submit">Cadastrar e continuar</button>
+                <button type="submit" class="btn-auth-submit">Cadastrar e continuar</button>
             </form>
         </section>
 
         <section class="auth-column">
             <div class="auth-icon-badge">🛡️</div>
             <h2 class="auth-column-title">Se já tiver uma conta, faça seu login</h2>
-            <button class="social-btn-fake fb">Continuar com Facebook</button>
-            <button class="social-btn-fake">🌐 Continuar com Google</button>
+            <button type="button" class="social-btn-fake fb">Continuar com Facebook</button>
+            <button type="button" class="social-btn-fake">🌐 Continuar com Google</button>
             <div class="divider-text">ou entre com sua conta</div>
             <div id="login-alert" class="alert-box-auth"></div>
             <form id="login-form" onsubmit="handleLogin(event)">
@@ -78,58 +76,50 @@
                     <label>Senha</label>
                     <input type="password" id="log-password" required placeholder="Sua senha cadastrada">
                 </div>
-                <button type="submit" id="btn-submit-login" class="btn-auth-submit">Entrar e continuar</button>
+                <button type="submit" class="btn-auth-submit">Entrar e continuar</button>
             </form>
         </section>
     </main>
 
     <script>
-        const SUPABASE_URL = "SUA_PROJECT_URL_AQUI"; 
-        const SUPABASE_ANON_KEY = "SUA_ANON_API_KEY_AQUI";
-        const supabase = (SUPABASE_URL !== "SUA_PROJECT_URL_AQUI") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-
-        // Função centralizadora de rotas pós-login
         function redirectPostAuth() {
             const temItemNoCarrinho = sessionStorage.getItem('item_no_carrinho');
-            if (temItemNoCarrinho) {
-                // Se tem item comprando, vai para a página de adição de pagamento
-                window.location.href = "https://meuanalytics.com.br/pagamento/index.html";
+            
+            if (temItemNoCarrinho !== null) {
+                // Se veio do carrinho, vai para o pagamento
+                window.location.replace("https://meuanalytics.com.br/pagamento/index.html");
             } else {
-                // Se clicou em Entrar seco no menu, volta para a Home oficial de marketing
-                window.location.href = "https://cursos.meuanalytics.com.br/";
+                // Se clicou em Entrar sem comprar nada, vai para a vitrine
+                window.location.replace("https://cursos.meuanalytics.com.br/");
             }
         }
 
-        async function handleRegister(event) {
-            event.preventDefault();
-            const email = document.getElementById('reg-email').value;
-            const phone = document.getElementById('reg-phone').value;
-            const alertBox = document.getElementById('register-alert');
+        function handleRegister(event) {
+            event.preventDefault(); // Impede o navegador de recarregar a página
             
+            const email = document.getElementById('reg-email').value;
             localStorage.setItem('user_id', 'usr_' + Math.random().toString(36).substr(2, 9));
             localStorage.setItem('user_email', email);
-            localStorage.setItem('user_cell', phone);
 
+            const alertBox = document.getElementById('register-alert');
             alertBox.className = "alert-box-auth alert-success";
             alertBox.innerText = "Conta criada! Direcionando...";
-            alertBox.style.display = 'block';
             
-            setTimeout(redirectPostAuth, 1000);
+            redirectPostAuth();
         }
 
-        async function handleLogin(event) {
-            event.preventDefault();
+        function handleLogin(event) {
+            event.preventDefault(); // Impede o navegador de recarregar a página
+            
             const email = document.getElementById('log-email').value;
-            const alertBox = document.getElementById('login-alert');
-
             localStorage.setItem('user_id', 'usr_' + Math.random().toString(36).substr(2, 9));
             localStorage.setItem('user_email', email);
 
+            const alertBox = document.getElementById('login-alert');
             alertBox.className = "alert-box-auth alert-success";
             alertBox.innerText = "Acesso autorizado! Direcionando...";
-            alertBox.style.display = 'block';
             
-            setTimeout(redirectPostAuth, 1000);
+            redirectPostAuth();
         }
     </script>
 </body>
