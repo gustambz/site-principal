@@ -13,11 +13,9 @@
         .cart-main { flex: 2; min-width: 300px; }
         .cart-sidebar { flex: 1; min-width: 300px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 4px; padding: 25px; height: fit-content; }
         
-        /* Alerta de Urgência */
         .urgency-alert { background-color: #fee2e2; border: 1px solid #fca5a5; border-radius: 4px; padding: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #991b1b; }
         .urgency-timer { background: #ef4444; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
 
-        /* Tabela de Itens */
         .items-table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 4px; margin-bottom: 20px; }
         .items-table th { text-align: left; padding: 12px; border-bottom: 2px solid #e5e7eb; color: #6b7280; font-size: 13px; }
         .items-table td { padding: 20px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
@@ -30,7 +28,6 @@
         .btn-remove:hover { color: #ef4444; }
         .price-text { font-weight: bold; color: #111827; font-size: 15px; }
 
-        /* Sidebar Cupom e Totais */
         .coupon-section { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; }
         .coupon-input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; background-color: #f9fafb; color: #4b5563; font-weight: 600; }
         
@@ -49,9 +46,12 @@
 
     <header class="main-header">
         <div class="header-container">
-            <a href="https://cursos.meuanalytics.com.br/" style="text-decoration: none;">
+            <a href="https://cursos.meuanalytics.com.br/nossos-cursos/" style="text-decoration: none;">
                 <div class="logo"><span class="logo-accent">MEU</span> ANALYTICS <span class="logo-sub">LABS</span></div>
             </a>
+            <nav class="nav-menu">
+                <a href="https://cursos.meuanalytics.com.br/nossos-cursos/">Nossos Cursos</a>
+            </nav>
         </div>
     </header>
 
@@ -85,7 +85,7 @@
 
         <div class="cart-sidebar" id="sidebar-wrapper">
             <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 5px;">
-                <span>🎫</span> Cupom aplicado
+                <span>🎫</span> Cupom applied
             </div>
             <div class="coupon-section">
                 <input type="text" class="coupon-input" id="coupon-field" value="NENHUM" readonly>
@@ -114,7 +114,7 @@
 
             <button onclick="goToNextStep()" class="btn-next-step">Escolher forma de pagamento</button>
             
-            <a href="https://cursos.meuanalytics.com.br/" style="display: block; text-align: center; margin-top: 15px; color: #6b7280; font-size: 14px; text-decoration: none; font-weight: bold;">+ Adicionar mais cursos</a>
+            <a href="https://cursos.meuanalytics.com.br/nossos-cursos/" style="display: block; text-align: center; margin-top: 15px; color: #6b7280; font-size: 14px; text-decoration: none; font-weight: bold;">+ Adicionar mais cursos</a>
             
             <div class="payment-icons">
                 <span>💳 Visa • Mastercard • Elo • Pix • Boleto</span>
@@ -127,26 +127,22 @@
     </footer>
 
     <script>
-        // Banco de dados em memória mapeando os nomes limpos e exatos das páginas de vendas
         const cursosDisponiveis = {
             'analytics-gestao': { nome: 'Analytics para Gestão' },
             'ga4': { nome: 'Google Analytics 4 (GA4)' },
             'gtm': { nome: 'Google Tag Manager (GTM)' }
         };
 
-        // Captura os parâmetros passados pelas páginas de vendas (ex: ?curso=ga4&cupom=DESCONTOSOCIAL)
         const urlParams = new URLSearchParams(window.location.search);
         let cursoId = urlParams.get('curso');
         let cupomId = urlParams.get('cupom');
 
-        // Fallback preventivo para testes diretos na URL
         if (!cursoId) cursoId = 'analytics-gestao';
         if (!cupomId) cupomId = 'DESCONTOSOCIAL';
 
         const tableBody = document.getElementById('cart-table-body');
         const curso = cursosDisponiveis[cursoId] || cursosDisponiveis['analytics-gestao'];
 
-        // Lógica de cálculo matemático do cupom de desconto com base em R$ 600,00
         let desconto = 0;
         let textoPrecoTotal = "";
         let subtextoPreco = "";
@@ -158,7 +154,6 @@
             textoPrecoTotal = "6x de R$ 84,90";
             subtextoPreco = "ou à vista por R$ 509,40";
         } else {
-            // Padrão ou DESCONTOSOCIAL
             cupomId = 'DESCONTOSOCIAL';
             desconto = 60.60;
             precoFinalSalvar = 539.40;
@@ -166,14 +161,12 @@
             subtextoPreco = "ou à vista por R$ 539,40";
         }
 
-        // Atualização dos componentes visuais do resumo
         document.getElementById('coupon-field').value = cupomId;
         document.getElementById('summary-coupon-name').innerText = cupomId;
         document.getElementById('summary-discount-value').innerText = `- R$ ${desconto.toFixed(2).replace('.', ',')}`;
         document.getElementById('summary-total-text').innerText = textoPrecoTotal;
         document.getElementById('summary-subtext').innerText = subtextoPreco;
 
-        // Armazenamento estruturado na sessão para o restante do checkout e GTM lerem futuramente
         sessionStorage.setItem('item_no_carrinho', JSON.stringify({
             id: cursoId,
             nome: curso.nome,
@@ -183,7 +176,6 @@
             texto_parcela: textoPrecoTotal
         }));
 
-        // Renderização limpa da linha da tabela (sem códigos vazios ou textos irrelevantes)
         tableBody.innerHTML = `
             <tr>
                 <td>
@@ -213,11 +205,11 @@
             document.getElementById('sidebar-wrapper').style.pointerEvents = 'none';
         }
 
+        // CORREÇÃO TÉCNICA AQUI: Aponta diretamente para o index.html da pasta login
         function goToNextStep() {
-            window.location.href = "https://meuanalytics.com.br/login/";
+            window.location.href = "https://meuanalytics.com.br/login/index.html";
         }
 
-        // Cronômetro do print
         let duration = 14 * 60 + 57;
         const timerDisplay = document.getElementById('timer');
         setInterval(() => {
