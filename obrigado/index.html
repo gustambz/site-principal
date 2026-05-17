@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrícula Confirmada! | Meu Analytics Labs</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body { background-color: #f3f4f6; color: #333; }
+        .success-header { background: #ffffff; padding: 15px 0; border-bottom: 1px solid #e5e7eb; }
+        .success-card { max-width: 600px; margin: 60px auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 40px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        
+        .success-icon { width: 80px; height: 80px; background: #22c55e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 25px auto; }
+        .success-title { font-size: 28px; font-weight: bold; color: #111827; margin-bottom: 15px; }
+        .success-message { color: #4b5563; font-size: 16px; line-height: 1.6; margin-bottom: 30px; }
+        
+        .order-details-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 20px; text-align: left; margin-bottom: 30px; }
+        .order-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .order-row:last-child { margin-bottom: 0; border-top: 1px solid #e5e7eb; padding-top: 10px; margin-top: 10px; font-weight: bold; }
+        
+        .btn-start-course { display: block; width: 100%; text-align: center; background: #0066ff; color: white !important; font-weight: bold; padding: 14px; border-radius: 4px; text-decoration: none; font-size: 16px; box-sizing: border-box; }
+        .btn-start-course:hover { background: #0055cc; }
+    </style>
+</head>
+<body>
+
+    <header class="success-header">
+        <div style="max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+            <div class="logo" style="font-size: 20px;"><span class="logo-accent">MEU</span> ANALYTICS <span class="logo-sub">LABS</span></div>
+        </div>
+    </header>
+
+    <main class="success-card">
+        <div class="success-icon">✓</div>
+        <h1 class="success-title">Parabéns! Sua matrícula foi confirmada</h1>
+        <p class="success-message">O seu pagamento foi processado com sucesso em nosso ambiente simulado. As credenciais de acesso ao seu painel do aluno e laboratórios virtuais foram enviadas para o e-mail cadastrado.</p>
+        
+        <div class="order-details-box">
+            <h3 style="margin-top: 0; font-size: 15px; margin-bottom: 15px; color: #111827;">Resumo do Pedido</h3>
+            <div class="order-row">
+                <span>Curso:</span>
+                <span id="p-course-name" style="font-weight: bold;">-</span>
+            </div>
+            <div class="order-row">
+                <span>Cupom utilizado:</span>
+                <span id="p-coupon" style="color: #22c55e; font-weight: bold;">-</span>
+            </div>
+            <div class="order-row">
+                <span>Método de Pagamento:</span>
+                <span id="p-method" style="text-transform: capitalize;">-</span>
+            </div>
+            <div class="order-row">
+                <span>Valor Final:</span>
+                <span id="p-final-value" style="color: #0066ff;">-</span>
+            </div>
+        </div>
+
+        <a href="https://cursos.meuanalytics.com.br/" class="btn-start-course">Acessar Ambiente de Aprendizado</a>
+    </main>
+
+    <footer class="main-footer" style="background: #f3f4f6; margin-top: 60px;">
+        <p>&copy; 2026 Meu Analytics Labs. Transação simulada para fins de homologação de dados de e-commerce.</p>
+    </footer>
+
+    <script>
+        // Coleta os dados armazenados na transação
+        const itemPurchased = JSON.parse(sessionStorage.getItem('item_no_carrinho'));
+
+        if (itemPurchased) {
+            // Preenche os dados visuais na tela
+            document.getElementById('p-course-name').innerText = itemPurchased.nome;
+            document.getElementById('p-coupon').innerText = itemPurchased.cupom;
+            document.getElementById('p-method').innerText = itemPurchased.metodo_pagamento || 'Não informado';
+            document.getElementById('p-final-value').innerText = itemPurchased.texto_parcela;
+
+            // Gustavo, deixei os dados expostos no escopo global do objeto 'window' de propósito.
+            // Quando formos configurar o GTM, você vai ver que criar uma variável JavaScript para ler isso aqui e disparar a tag do GA4 será moleza!
+            window.purchasedProductData = {
+                transaction_id: 'T_' + Math.floor(100000 + Math.random() * 900000),
+                item_id: itemPurchased.id,
+                item_name: itemPurchased.nome,
+                coupon: itemPurchased.cupom,
+                value: itemPurchased.preco_final,
+                payment_method: itemPurchased.metodo_pagamento
+            };
+
+            // Após a renderização, limpamos o carrinho para que o usuário não volte e duplique a compra acidentalmente
+            sessionStorage.removeItem('item_no_carrinho');
+        } else {
+            // Se cair aqui sem dados, joga de volta pra home
+            window.location.href = "https://cursos.meuanalytics.com.br/";
+        }
+    </script>
+</body>
+</html>
