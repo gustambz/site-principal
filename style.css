@@ -1,6 +1,4 @@
-/* ==========================================
-   RESET E ESTILOS DE BASE
-   ========================================== */
+/* Reset e Estilos de Base */
 * {
     margin: 0;
     padding: 0;
@@ -25,9 +23,7 @@ body {
     max-width: 800px;
 }
 
-/* ==========================================
-   MENU E CABEÇALHO (GLOBAL)
-   ========================================== */
+/* Menu e Cabeçalho */
 .main-header {
     background-color: #ffffff;
     border-bottom: 1px solid #e2e8f0;
@@ -55,6 +51,11 @@ body {
 .logo-accent { color: #000000; }
 .logo-sub { color: #e11d48; }
 
+.nav-menu {
+    display: flex;
+    align-items: center;
+}
+
 .nav-menu a {
     color: #475569;
     text-decoration: none;
@@ -64,20 +65,34 @@ body {
     transition: color 0.2s;
 }
 
-.nav-menu a:hover, .nav-menu a.active { color: #e11d48; }
+.nav-menu a:hover, .nav-menu a.active {
+    color: #e11d48;
+}
+
+/* Estilo do novo botão Entrar no Menu */
+.nav-menu a.btn-login-nav {
+    color: #475569;
+    font-weight: 600;
+    margin-left: 25px;
+}
+.nav-menu a.btn-login-nav:hover {
+    color: #e11d48;
+}
 
 .nav-menu a.btn-nav {
     background-color: #0f172a;
     color: #ffffff;
     padding: 8px 16px;
     border-radius: 6px;
+    margin-left: 15px;
 }
 
-.nav-menu a.btn-nav:hover { background-color: #e11d48; }
+.nav-menu a.btn-nav:hover {
+    background-color: #e11d48;
+    color: #ffffff;
+}
 
-/* ==========================================
-   ELEMENTOS DA HOME PAGE (SITE PRINCIPAL)
-   ========================================== */
+/* Banner Principal (Hero) */
 .hero-section {
     background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
     color: #ffffff;
@@ -131,6 +146,7 @@ body {
     font-size: 0.95rem;
 }
 
+/* Títulos de Seção */
 .section-title {
     font-size: 1.8rem;
     color: #0f172a;
@@ -143,6 +159,7 @@ body {
     content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 4px; background-color: #e11d48; border-radius: 2px;
 }
 
+/* Vitrine de Cards (Grid) */
 .courses-grid, .ingresso-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -182,11 +199,13 @@ body {
 .view-all-link { color: #1e3a8a; font-weight: 600; text-decoration: none; font-size: 0.95rem; }
 .view-all-link:hover { text-decoration: underline; }
 
+/* Seção de Vídeo */
 .video-wrapper {
     position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
+/* Seção do Formulário de Leads */
 .lead-section { background-color: #0f172a; color: #ffffff; padding: 60px 20px; }
 .lead-container { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 40px; }
 .lead-text { flex: 1; min-width: 300px; }
@@ -207,56 +226,26 @@ body {
 }
 .btn-submit:hover { background-color: #be123c; }
 
-/* ==========================================
-   CORREÇÃO VISUAL: PÁGINAS DE VENDAS (PDP)
-   ========================================== */
+/* Páginas de Vendas (PDP) */
 .pdp-wrapper { color: #1e293b; }
 .pdp-main h1 { color: #0f172a; font-weight: 800; }
 .pdp-main h2 { color: #0f172a; margin-top: 20px; font-size: 1.5rem; }
 .pdp-main p { color: #475569; }
 .pdp-main .subtitle { color: #64748b !important; }
 
-/* Sidebar Escura - Garantindo Contraste Alto */
-.pdp-sidebar {
-    color: #ffffff !important; /* Força todos os textos gerais a ficarem brancos */
-}
-.pdp-sidebar h3 {
-    color: #ffffff !important; /* Nome do Desconto Social em Branco */
-    font-size: 1.4rem;
-    font-weight: 700;
-}
-.pdp-sidebar p {
-    color: #94a3b8 !important; /* Textos de apoio em cinza claro */
-}
+.pdp-sidebar { color: #ffffff !important; }
+.pdp-sidebar h3 { color: #ffffff !important; font-size: 1.4rem; font-weight: 700; }
+.pdp-sidebar p { color: #94a3b8 !important; }
 
-/* Acordeão (Matriz Curricular) - Correção de Cores */
 details.accordion-item summary {
-    color: #ffffff !important; /* Título do Semestre em Branco */
-    background: #111c2e !important;
-    border: 1px solid #22314d;
-    transition: background 0.2s;
+    color: #ffffff !important; background: #111c2e !important; border: 1px solid #22314d; transition: background 0.2s;
 }
-details.accordion-item summary:hover {
-    background: #16243d !important;
-}
+details.accordion-item summary:hover { background: #16243d !important; }
+.grid-disciplinas { background: #1a263b !important; border: 1px solid #22314d; }
+.disciplina-row { color: #cbd5e1 !important; border-bottom: 1px solid #22314d; }
+.disciplina-row span:last-child { color: #ff2a43 !important; font-weight: bold; }
 
-.grid-disciplinas {
-    background: #1a263b !important; /* Fundo ligeiramente diferente para destacar as matérias */
-    border: 1px solid #22314d;
-}
-
-.disciplina-row {
-    color: #cbd5e1 !important; /* Nome das matérias em cinza claro legível */
-    border-bottom: 1px solid #22314d;
-}
-.disciplina-row span:last-child {
-    color: #ff2a43 !important; /* Carga horária (ex: 80h) em Vermelho destacado */
-    font-weight: bold;
-}
-
-/* ==========================================
-   RODAPÉ (GLOBAL)
-   ========================================== */
+/* Rodapé */
 .main-footer {
     background-color: #1e293b;
     color: #64748b;
