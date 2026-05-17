@@ -1,4 +1,6 @@
-/* Reset e Estilos de Base */
+/* ==========================================
+   RESET E ESTILOS DE BASE
+   ========================================== */
 * {
     margin: 0;
     padding: 0;
@@ -23,7 +25,9 @@ body {
     max-width: 800px;
 }
 
-/* Menu e Cabeçalho */
+/* ==========================================
+   MENU E CABEÇALHO (GLOBAL)
+   ========================================== */
 .main-header {
     background-color: #ffffff;
     border-bottom: 1px solid #e2e8f0;
@@ -71,7 +75,9 @@ body {
 
 .nav-menu a.btn-nav:hover { background-color: #e11d48; }
 
-/* Banner Principal (Hero) */
+/* ==========================================
+   ELEMENTOS DA HOME PAGE (SITE PRINCIPAL)
+   ========================================== */
 .hero-section {
     background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
     color: #ffffff;
@@ -89,21 +95,9 @@ body {
 }
 
 .hero-content { max-width: 600px; }
-
-.hero-content h1 {
-    font-size: 2.5rem;
-    line-height: 1.2;
-    margin-bottom: 15px;
-    font-weight: 800;
-}
-
+.hero-content h1 { font-size: 2.5rem; line-height: 1.2; margin-bottom: 15px; font-weight: 800; }
 .hero-content .highlight { color: #e11d48; }
-
-.hero-content p {
-    font-size: 1.1rem;
-    color: #cbd5e1;
-    margin-bottom: 25px;
-}
+.hero-content p { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 25px; }
 
 .btn-primary {
     background-color: #e11d48;
@@ -116,7 +110,6 @@ body {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
 }
-
 .btn-primary:hover { background-color: #be123c; }
 
 .hero-mock-image {
@@ -138,7 +131,6 @@ body {
     font-size: 0.95rem;
 }
 
-/* Títulos de Seção */
 .section-title {
     font-size: 1.8rem;
     color: #0f172a;
@@ -147,19 +139,10 @@ body {
     position: relative;
     padding-left: 15px;
 }
-
 .section-title::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 4px;
-    bottom: 4px;
-    width: 4px;
-    background-color: #e11d48;
-    border-radius: 2px;
+    content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 4px; background-color: #e11d48; border-radius: 2px;
 }
 
-/* Vitrine de Cards (Grid) */
 .courses-grid, .ingresso-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -175,160 +158,105 @@ body {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .course-card:hover, .ingresso-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .card-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 15px;
+    width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
 }
-
 .card-icon.blue { background-color: #eff6ff; }
 .card-icon.orange { background-color: #fff7ed; }
 .card-icon.cyan { background-color: #ecfeff; }
 .icon-placeholder { font-size: 1.5rem; }
 
-.course-card h3, .ingresso-card h3 {
-    font-size: 1.2rem;
-    color: #0f172a;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.course-card p, .ingresso-card p {
-    color: #64748b;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-}
+.course-card h3, .ingresso-card h3 { font-size: 1.2rem; color: #0f172a; margin-bottom: 10px; font-weight: 600; }
+.course-card p, .ingresso-card p { color: #64748b; font-size: 0.95rem; margin-bottom: 20px; }
 
 .btn-card, .btn-ingresso {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background-color: #eff6ff;
-    color: #1e40af;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    display: block; width: 100%; text-align: center; background-color: #eff6ff; color: #1e40af; border: none; padding: 10px; border-radius: 6px; font-weight: 600; text-decoration: none; font-size: 0.9rem; cursor: pointer; transition: background-color 0.2s;
 }
+.btn-card:hover, .btn-ingresso:hover { background-color: #e11d48; color: #ffffff; }
 
-.btn-card:hover, .btn-ingresso:hover {
-    background-color: #e11d48;
-    color: #ffffff;
-}
-
-.view-all-wrapper {
-    text-align: center;
-    margin-top: 25px;
-}
-
-.view-all-link {
-    color: #1e3a8a;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 0.95rem;
-}
-
+.view-all-wrapper { text-align: center; margin-top: 25px; }
+.view-all-link { color: #1e3a8a; font-weight: 600; text-decoration: none; font-size: 0.95rem; }
 .view-all-link:hover { text-decoration: underline; }
 
-/* Seção de Vídeo */
 .video-wrapper {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
+.video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-.video-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-/* Seção do Formulário de Leads */
-.lead-section {
-    background-color: #0f172a;
-    color: #ffffff;
-    padding: 60px 20px;
-}
-
-.lead-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 40px;
-}
-
-.lead-text {
-    flex: 1;
-    min-width: 300px;
-}
-
-.lead-text p {
-    color: #94a3b8;
-    font-size: 1.05rem;
-}
+.lead-section { background-color: #0f172a; color: #ffffff; padding: 60px 20px; }
+.lead-container { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 40px; }
+.lead-text { flex: 1; min-width: 300px; }
+.lead-text p { color: #94a3b8; font-size: 1.05rem; }
 
 .lead-form-box {
-    flex: 1;
-    min-width: 300px;
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 30px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex: 1; min-width: 300px; background-color: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 .form-group { margin-bottom: 15px; }
-
 .form-group input, .form-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #334155;
-    background-color: #1e293b;
-    color: #ffffff;
-    border-radius: 6px;
-    font-size: 0.95rem;
+    width: 100%; padding: 12px; border: 1px solid #334155; background-color: #1e293b; color: #ffffff; border-radius: 6px; font-size: 0.95rem;
 }
-
 .form-group input::placeholder { color: #64748b; }
 .form-group select option { background-color: #1e293b; }
 
 .btn-submit {
-    width: 100%;
-    background-color: #e11d48;
-    color: #ffffff;
-    border: none;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    width: 100%; background-color: #e11d48; color: #ffffff; border: none; padding: 12px; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
-
 .btn-submit:hover { background-color: #be123c; }
 
-/* Rodapé */
+/* ==========================================
+   CORREÇÃO VISUAL: PÁGINAS DE VENDAS (PDP)
+   ========================================== */
+.pdp-wrapper { color: #1e293b; }
+.pdp-main h1 { color: #0f172a; font-weight: 800; }
+.pdp-main h2 { color: #0f172a; margin-top: 20px; font-size: 1.5rem; }
+.pdp-main p { color: #475569; }
+.pdp-main .subtitle { color: #64748b !important; }
+
+/* Sidebar Escura - Garantindo Contraste Alto */
+.pdp-sidebar {
+    color: #ffffff !important; /* Força todos os textos gerais a ficarem brancos */
+}
+.pdp-sidebar h3 {
+    color: #ffffff !important; /* Nome do Desconto Social em Branco */
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+.pdp-sidebar p {
+    color: #94a3b8 !important; /* Textos de apoio em cinza claro */
+}
+
+/* Acordeão (Matriz Curricular) - Correção de Cores */
+details.accordion-item summary {
+    color: #ffffff !important; /* Título do Semestre em Branco */
+    background: #111c2e !important;
+    border: 1px solid #22314d;
+    transition: background 0.2s;
+}
+details.accordion-item summary:hover {
+    background: #16243d !important;
+}
+
+.grid-disciplinas {
+    background: #1a263b !important; /* Fundo ligeiramente diferente para destacar as matérias */
+    border: 1px solid #22314d;
+}
+
+.disciplina-row {
+    color: #cbd5e1 !important; /* Nome das matérias em cinza claro legível */
+    border-bottom: 1px solid #22314d;
+}
+.disciplina-row span:last-child {
+    color: #ff2a43 !important; /* Carga horária (ex: 80h) em Vermelho destacado */
+    font-weight: bold;
+}
+
+/* ==========================================
+   RODAPÉ (GLOBAL)
+   ========================================== */
 .main-footer {
     background-color: #1e293b;
     color: #64748b;
@@ -336,15 +264,5 @@ body {
     padding: 20px;
     font-size: 0.85rem;
     border-top: 1px solid #334155;
-}
-
-/* Responsividade básica */
-@media (max-width: 768px) {
-    .header-container, .hero-container, .lead-container {
-        flex-direction: column;
-        text-align: center;
-    }
-    .logo { margin-bottom: 15px; }
-    .nav-menu a { margin: 0 10px; }
-    .hero-mock-image { display: none; }
+    margin-top: 50px;
 }
