@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Analytics | Portal de Cursos</title>
+    <link rel="stylesheet" href="https://unpkg.com/@mvpcss/mvp">
+    <style>
+        /* Ajuste simples para simular o visual de carrossel/cards lado a lado */
+        .carrossel-cursos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .card-curso {
+            flex: 1 1 280px;
+            max-width: 320px;
+        }
+        iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="index.html"><b>🏠 Home</b></a>
+            <a href="#cursos">📚 Nossos Cursos</a>
+            <a href="#ingresso">🎓 Formas de Ingresso</a>
+            <a href="#sobre">🔬 Sobre Nós</a>
+        </nav>
+        
+        <section>
+            <h1>Acelere sua Carreira em Dados de Performance</h1>
+            <p>Domine as ferramentas mais exigidas pelo mercado de tecnologia de ponta a ponta. Aprenda instalando, coletando e modelando dados reais.</p>
+            <p>
+                <a href="#cursos"><b>🚀 Ver Nossos Cursos</b></a>
+            </p>
+        </section>
+    </header>
+
+    <main>
+        <hr>
+
+        <section id="cursos">
+            <header>
+                <h2>Nossos Cursos</h2>
+                <p>Escolha a sua trilha de especialização em Web Analytics</p>
+            </header>
+            
+            <div class="carrossel-cursos">
+                <aside class="card-curso">
+                    <h3>Digital Analytics</h3>
+                    <p>A base cultural, metodologias e conceitos essenciais de métricas de negócios digitais.</p>
+                    <button class="btn-curso" data-nome="Digital Analytics" data-id="DA-01" data-preco="199.90">Conhecer Curso</button>
+                </aside>
+
+                <aside class="card-curso">
+                    <h3>Google Analytics 4 (GA4)</h3>
+                    <p>Aprenda a configurar propriedades, fluxos de dados e dominar a nova interface do Google.</p>
+                    <button class="btn-curso" data-nome="GA4" data-id="GA4-02" data-preco="299.90">Conhecer Curso</button>
+                </aside>
+
+                <aside class="card-curso">
+                    <h3>Google Tag Manager (GTM)</h3>
+                    <p>Domine acionadores, variáveis e a camada de dados (Data Layer) para rastreamento avançado.</p>
+                    <button class="btn-curso" data-nome="GTM" data-id="GTM-03" data-preco="249.90">Conhecer Curso</button>
+                </aside>
+
+                <aside class="card-curso">
+                    <h3>Google BigQuery</h3>
+                    <p>Aprenda SQL focado em analisar os dados brutos exportados do GA4 sem limites de amostragem.</p>
+                    <button class="btn-curso" data-nome="BigQuery" data-id="BQ-04" data-preco="349.90">Conhecer Curso</button>
+                </aside>
+
+                <aside class="card-curso">
+                    <h3>Looker Studio</h3>
+                    <p>Transforme queries do BigQuery em dashboards gerenciais e relatórios visuais impactantes.</p>
+                    <button class="btn-curso" data-nome="Looker Studio" data-id="LS-05" data-preco="199.90">Conhecer Curso</button>
+                </aside>
+            </div>
+
+            <p style="text-align: center; margin-top: 30px;">
+                <a href="#cursos"><i>👁️ Ver todos os cursos da grade</i></a>
+            </p>
+        </section>
+
+        <hr>
+
+        <section id="ingresso">
+            <header>
+                <h2>Formas de Ingresso</h2>
+                <p>Saiba como iniciar seus estudos hoje mesmo</p>
+            </header>
+            <p>Aceitamos ingresso direto via processo seletivo simplificado, transferência externa ou bolsas de estudo baseadas em desafios técnicos de dados.</p>
+            <p>
+                <button id="btn-ingresso">Consultar Edital de Ingresso</button>
+            </p>
+        </section>
+
+        <hr>
+
+        <section id="sobre" style="text-align: center;">
+            <h2>Conheça o Projeto Labs</h2>
+            <p>Assista ao vídeo abaixo para entender a arquitetura de dados que estamos construindo nos bastidores deste portal.</p>
+            <div>
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <hr>
+
+        <section id="cadastro">
+            <header>
+                <h2>Receba Nossa Grade Curricular</h2>
+                <p>Preencha os dados abaixo para receber o PDF com o detalhamento de todas as aulas.</p>
+            </header>
+            <form id="form-lead">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" placeholder="Seu nome aqui" required>
+
+                <label for="email">E-mail Corporativo:</label>
+                <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+
+                <label for="interesse">Curso de Maior Interesse:</label>
+                <select id="interesse" name="interesse">
+                    <option value="analytics_geral">Todos os Cursos (Formação Completa)</option>
+                    <option value="ga4">Google Analytics 4</option>
+                    <option value="gtm">Google Tag Manager</option>
+                    <option value="bigquery">BigQuery & SQL</option>
+                </select>
+
+                <button type="submit">Quero Receber a Grade</button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        <p><small>© 2026 Meu Analytics Labs. Desenvolvido para portfólio de engenharia e arquitetura de Web Analytics.</small></p>
+    </footer>
+
+</body>
+</html>
