@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Identificação | Meu Analytics Labs</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <style>
         body { background-color: #ffffff; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .auth-logo-header { text-align: center; padding: 25px 0; border-bottom: 1px solid #e5e7eb; background: #ffffff; }
@@ -21,7 +22,10 @@
         .divider-text { text-align: center; margin: 15px 0; color: #9ca3af; font-size: 12px; }
         .alert-box-auth { padding: 12px; border-radius: 4px; margin-bottom: 20px; font-size: 14px; display: none; text-align: center; }
         .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; display: block !important; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; display: block !important; }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -56,7 +60,7 @@
                     <label>Senha</label>
                     <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres" minlength="6">
                 </div>
-                <button type="submit" class="btn-auth-submit">Cadastrar e continuar</button>
+                <button type="submit" class="btn-auth-submit" id="btn-register">Cadastrar e continuar</button>
             </form>
         </section>
 
@@ -76,50 +80,144 @@
                     <label>Senha</label>
                     <input type="password" id="log-password" required placeholder="Sua senha cadastrada">
                 </div>
-                <button type="submit" class="btn-auth-submit">Entrar e continuar</button>
+                <button type="submit" class="btn-auth-submit" id="btn-login">Entrar e continuar</button>
             </form>
         </section>
     </main>
 
     <script>
+        // 1. INICIALIZAÇÃO DO CLIENTE SUPABASE
+        const SUPABASE_URL = "https://lslqpdoidgteihcxjqr.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_WnJunLw2RbK4yVjkN2r8IA_j_NWO3El";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 2. FUNÇÃO UNIFICADA PARA REDIRECIONAMENTO POST-AUTH
         function redirectPostAuth() {
             const temItemNoCarrinho = sessionStorage.getItem('item_no_carrinho');
-            
             if (temItemNoCarrinho !== null) {
-                // Se veio do carrinho, vai para o pagamento
                 window.location.replace("https://meuanalytics.com.br/pagamento/index.html");
             } else {
-                // Se clicou em Entrar sem comprar nada, vai para a vitrine
                 window.location.replace("https://cursos.meuanalytics.com.br/");
             }
         }
 
-        function handleRegister(event) {
-            event.preventDefault(); // Impede o navegador de recarregar a página
-            
-            const email = document.getElementById('reg-email').value;
-            localStorage.setItem('user_id', 'usr_' + Math.random().toString(36).substr(2, 9));
-            localStorage.setItem('user_email', email);
-
-            const alertBox = document.getElementById('register-alert');
-            alertBox.className = "alert-box-auth alert-success";
-            alertBox.innerText = "Conta criada! Direcionando...";
-            
-            redirectPostAuth();
+        // 3. FUNÇÃO AUXILIAR PARA ALIMENTAR O DATA LAYER DO GTM
+        function dispararIdentidadeNoDataLayer(userId, email, statusUsuario) {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'user_identified',
+                'user_id': userId,
+                'user_email': email,
+                'user_status': statusUsuario // "novo" para cadastro, "existente" para login regular
+            });
         }
 
-        function handleLogin(event) {
-            event.preventDefault(); // Impede o navegador de recarregar a página
+        // 4. LÓGICA DE CADASTRO (SIGN UP)
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('btn-register');
+            const alertBox = document.getElementById('register-alert');
+            
+            const nome = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const telefone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-password').value;
+
+            btn.disabled = true;
+            btn.innerText = "Processando...";
+            alertBox.style.display = "none";
+
+            // Tempo 1: Criar usuário na tabela padrão de autenticação (auth.users)
+            const { data: authData, error: authError } = await _supabase.auth.signUp({
+                email: email,
+                password: password
+            });
+
+            if (authError) {
+                alertBox.className = "alert-box-auth alert-error";
+                alertBox.innerText = `Erro no cadastro: ${authError.message}`;
+                alertBox.style.display = "block";
+                btn.disabled = false;
+                btn.innerText = "Cadastrar e continuar";
+                return;
+            }
+
+            const userIdGerado = authData.user.id;
+
+            // Tempo 2: Pegar o ID gerado e salvar os dados de negócio na tabela 'perfis_alunos'
+            const { error: profileError } = await _supabase
+                .from('perfis_alunos')
+                .insert([
+                    { id: userIdGerado, email: email, nome: nome, telefone: telefone }
+                ]);
+
+            if (profileError) {
+                alertBox.className = "alert-box-auth alert-error";
+                alertBox.innerText = `Erro ao salvar dados do perfil: ${profileError.message}`;
+                alertBox.style.display = "block";
+                btn.disabled = false;
+                btn.innerText = "Cadastrar e continuar";
+                return;
+            }
+
+            // Sucesso total no backend -> Salvar estado local temporário para a aplicação
+            sessionStorage.setItem('user_id', userIdGerado);
+            sessionStorage.setItem('user_email', email);
+
+            // Camada Analítica: Disparar evento para o GTM com o ID imutável do banco
+            dispararIdentidadeNoDataLayer(userIdGerado, email, "novo");
+
+            alertBox.className = "alert-box-auth alert-success";
+            alertBox.innerText = "Conta criada com sucesso! Redirecionando...";
+            alertBox.style.display = "block";
+
+            setTimeout(redirectPostAuth, 1000);
+        }
+
+        // 5. LÓGICA DE LOGIN (SIGN IN)
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('btn-login');
+            const alertBox = document.getElementById('login-alert');
             
             const email = document.getElementById('log-email').value;
-            localStorage.setItem('user_id', 'usr_' + Math.random().toString(36).substr(2, 9));
-            localStorage.setItem('user_email', email);
+            const password = document.getElementById('log-password').value;
 
-            const alertBox = document.getElementById('login-alert');
+            btn.disabled = true;
+            btn.innerText = "Autenticando...";
+            alertBox.style.display = "none";
+
+            // Validar credenciais contra a tabela nativa de segurança (auth.users)
+            const { data, error } = await _supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                alertBox.className = "alert-box-auth alert-error";
+                alertBox.innerText = `Acesso negado: ${error.message}`;
+                alertBox.style.display = "block";
+                btn.disabled = false;
+                btn.innerText = "Entrar e continuar";
+                return;
+            }
+
+            const userIdExistente = data.user.id;
+
+            // Sucesso no login -> Armazenar estado local
+            sessionStorage.setItem('user_id', userIdExistente);
+            sessionStorage.setItem('user_email', email);
+
+            // Camada Analítica: Disparar o mesmo evento, mantendo a integridade do ID no GTM
+            dispararIdentidadeNoDataLayer(userIdExistente, email, "existente");
+
             alertBox.className = "alert-box-auth alert-success";
-            alertBox.innerText = "Acesso autorizado! Direcionando...";
-            
-            redirectPostAuth();
+            alertBox.innerText = "Acesso autorizado! Redirecionando...";
+            alertBox.style.display = "block";
+
+            setTimeout(redirectPostAuth, 1000);
         }
     </script>
 </body>
