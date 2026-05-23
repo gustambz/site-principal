@@ -86,11 +86,22 @@
     </main>
 
     <script>
-        // 1. INICIALIZAÇÃO DO CLIENTE SUPABASE
-        const SUPABASE_URL = "https://lslqpdoidgteihcxjqr.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_WnJunLw2RbK4yVjkN2r8IA_j_NWO3El";
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// 1. INICIALIZAÇÃO DO CLIENTE SUPABASE (VERSÃO BLINDADA CONTRA BLOQUEIO)
+const SUPABASE_URL = "https://lslqpdoidgteihcxjqr.supabase.co";
+const SUPABASE_KEY = "sb_publishable_WnJunLw2RbK4yVjkN2r8IA_j_NWO3El";
 
+const supabaseOptions = {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: false // Evita que o navegador barre a leitura da URL na aba anônima
+  },
+  global: {
+    headers: { 'X-Client-Info': 'supabase-js-web' }
+  }
+};
+
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOptions);
         // 2. FUNÇÃO UNIFICADA PARA REDIRECIONAMENTO POST-AUTH
         function redirectPostAuth() {
             const temItemNoCarrinho = sessionStorage.getItem('item_no_carrinho');
