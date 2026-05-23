@@ -38,7 +38,7 @@
     <main class="auth-container">
         <section class="auth-column">
             <div class="auth-icon-badge">🪪</div>
-            <h2 class="auth-column-title">Cadastre-se para continuar</h2>
+            <h2 class="auth-column-title">Cadastre-se para continuing</h2>
             <button type="button" class="social-btn-fake fb">Continuar com Facebook</button>
             <button type="button" class="social-btn-fake">🌐 Continuar com Google</button>
             <div class="divider-text">ou preencha os dados abaixo</div>
@@ -104,7 +104,6 @@
                         return value ? decodeURIComponent(value.pop()) : null;
                     },
                     setItem: (key, value) => {
-                        // Configurado sem "Secure" para aceitar o HTTP local do seu computador
                         document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${COOKIE_DOMAIN}; max-age=31536000; samesite=lax`;
                     },
                     removeItem: (key) => {
@@ -117,11 +116,11 @@
             }
         };
 
-        // Instância única global do Supabase criada corretamente
-        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOptions);
+        // Mudamos o nome para 'supabaseClient' para evitar conflito com o script global da CDN
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOptions);
 
         // 2. O GANCHO DO CARREGAMENTO TARDIO (A ORDEM CRONOLÓGICA)
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
             window.dataLayer = window.dataLayer || [];
 
             if (session && session.user) {
@@ -183,7 +182,7 @@
             btn.innerText = "Processando...";
             alertBox.style.display = "none";
 
-            const { data: authData, error: authError } = await supabase.auth.signUp({
+            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
                 email: email,
                 password: password
             });
@@ -199,7 +198,7 @@
 
             const userIdGerado = authData.user.id;
 
-            const { error: profileError } = await supabase
+            const { error: profileError } = await supabaseClient
                 .from('perfis_alunos')
                 .insert([
                     { id: userIdGerado, email: email, nome: nome, telefone: telefone }
@@ -210,7 +209,7 @@
                 alertBox.innerText = `Erro ao salvar dados do perfil: ${profileError.message}`;
                 alertBox.style.display = "block";
                 btn.disabled = false;
-                btn.innerText = "Cadastrar e continuar";
+                btn.innerText = "Cadastrar e continuing";
                 return;
             }
 
@@ -240,7 +239,7 @@
             btn.innerText = "Autenticando...";
             alertBox.style.display = "none";
 
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: email,
                 password: password
             });
