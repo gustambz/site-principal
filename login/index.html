@@ -86,23 +86,66 @@
     </main>
 
     <script>
-// 1. INICIALIZAÇÃO DO CLIENTE SUPABASE (VERSÃO BLINDADA CONTRA BLOQUEIO)
-const SUPABASE_URL = "https://lcslqpdoidgteihcxjqr.supabase.co";
-const SUPABASE_KEY = "sb_publishable_WnJunLw2RbK4yVjkN2r8IA_j_NWO3El";
+        // 1. INICIALIZAÇÃO DO CLIENTE SUPABASE (VERSÃO BLINDADA COM COOKIES COLETIVOS)
+        const SUPABASE_URL = "https://lcslqpdoidgteihcxjqr.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_WnJunLw2RbK4yVjkN2r8IA_j_NWO3El";
 
-const supabaseOptions = {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: false // Evita que o navegador barre a leitura da URL na aba anônima
-  },
-  global: {
-    headers: { 'X-Client-Info': 'supabase-js-web' }
-  }
-};
+        // Ajustado para o domínio de testes locais do seu arquivo hosts (sem protocolo https://)
+        const COOKIE_DOMAIN = ".meuanalytics.local"; 
 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOptions);
-        // 2. FUNÇÃO UNIFICADA PARA REDIRECIONAMENTO POST-AUTH
+        const supabaseOptions = {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: false,
+                storage: {
+                    getItem: (key) => {
+                        const value = document.cookie.match('(^|;)\\s*' + key + '\\s*=\\s*([^;]+)');
+                        return value ? decodeURIComponent(value.pop()) : null;
+                    },
+                    setItem: (key, value) => {
+                        document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${COOKIE_DOMAIN}; max-age=31536000; SameSite=Lax; Secure`;
+                    },
+                    removeItem: (key) => {
+                        document.cookie = `${key}=; path=/; domain=${COOKIE_DOMAIN}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+                    }
+                }
+            },
+            global: {
+                headers: { 'X-Client-Info': 'supabase-js-web' }
+            }
+        };
+
+        // Corrigido para chamar o construtor global da CDN corretamente
+        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOptions);
+
+        // 2. O GANCHO DO CARREGAMENTO TARDIO (A ORDEM CRONOLÓGICA)
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            window.dataLayer = window.dataLayer || [];
+
+            if (session && session.user) {
+                window.dataLayer.push({
+                    'user_id': session.user.id
+                });
+                console.log("Supabase: Usuário identificado na carga inicial ->", session.user.id);
+            } else {
+                window.dataLayer.push({
+                    'user_id': null
+                });
+                console.log("Supabase: Usuário Anônimo na carga inicial.");
+            }
+
+            // SINAL VERDE MENTAL: O local onde o GTM vai nascer no futuro
+            console.log("GTM Liberado para carregar agora!");
+
+        }).catch((error) => {
+            console.error("Erro na verificação inicial do Supabase:", error);
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({ 'user_id': null });
+            console.log("GTM Liberado por contingência (Erro Supabase).");
+        });
+
+        // 3. FUNÇÃO UNIFICADA PARA REDIRECIONAMENTO POST-AUTH
         function redirectPostAuth() {
             const temItemNoCarrinho = sessionStorage.getItem('item_no_carrinho');
             if (temItemNoCarrinho !== null) {
@@ -112,18 +155,19 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOpti
             }
         }
 
-        // 3. FUNÇÃO AUXILIAR PARA ALIMENTAR O DATA LAYER DO GTM
+        // 4. FUNÇÃO AUXILIAR PARA ALIMENTAR O DATA LAYER DO GTM (DISPARADA APENAS NO CLIQUE)
         function dispararIdentidadeNoDataLayer(userId, email, statusUsuario) {
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
                 'event': 'user_identified',
                 'user_id': userId,
                 'user_email': email,
-                'user_status': statusUsuario // "novo" para cadastro, "existente" para login regular
+                'user_status': statusUsuario
             });
+            console.log(`Evento 'user_identified' enviado pro dataLayer (${statusUsuario})`);
         }
 
-        // 4. LÓGICA DE CADASTRO (SIGN UP)
+        // 5. LÓGICA DE CADASTRO (SIGN UP)
         async function handleRegister(event) {
             event.preventDefault();
             
@@ -139,8 +183,8 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOpti
             btn.innerText = "Processando...";
             alertBox.style.display = "none";
 
-            // Tempo 1: Criar usuário na tabela padrão de autenticação (auth.users)
-            const { data: authData, error: authError } = await _supabase.auth.signUp({
+            // Corrigido para usar a constante unificada 'supabase'
+            const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: email,
                 password: password
             });
@@ -156,8 +200,8 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOpti
 
             const userIdGerado = authData.user.id;
 
-            // Tempo 2: Pegar o ID gerado e salvar os dados de negócio na tabela 'perfis_alunos'
-            const { error: profileError } = await _supabase
+            // Corrigido para usar a constante unificada 'supabase'
+            const { error: profileError } = await supabase
                 .from('perfis_alunos')
                 .insert([
                     { id: userIdGerado, email: email, nome: nome, telefone: telefone }
@@ -172,11 +216,9 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOpti
                 return;
             }
 
-            // Sucesso total no backend -> Salvar estado local temporário para a aplicação
             sessionStorage.setItem('user_id', userIdGerado);
             sessionStorage.setItem('user_email', email);
 
-            // Camada Analítica: Disparar evento para o GTM com o ID imutável do banco
             dispararIdentidadeNoDataLayer(userIdGerado, email, "novo");
 
             alertBox.className = "alert-box-auth alert-success";
@@ -186,7 +228,7 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOpti
             setTimeout(redirectPostAuth, 1000);
         }
 
-        // 5. LÓGICA DE LOGIN (SIGN IN)
+        // 6. LÓGICA DE LOGIN (SIGN IN)
         async function handleLogin(event) {
             event.preventDefault();
 
@@ -200,8 +242,8 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOpti
             btn.innerText = "Autenticando...";
             alertBox.style.display = "none";
 
-            // Validar credenciais contra a tabela nativa de segurança (auth.users)
-            const { data, error } = await _supabase.auth.signInWithPassword({
+            // Corrigido para usar a constante unificada 'supabase'
+            const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
             });
@@ -217,11 +259,9 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOpti
 
             const userIdExistente = data.user.id;
 
-            // Sucesso no login -> Armazenar estado local
             sessionStorage.setItem('user_id', userIdExistente);
             sessionStorage.setItem('user_email', email);
 
-            // Camada Analítica: Disparar o mesmo evento, mantendo a integridade do ID no GTM
             dispararIdentidadeNoDataLayer(userIdExistente, email, "existente");
 
             alertBox.className = "alert-box-auth alert-success";
