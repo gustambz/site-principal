@@ -104,7 +104,7 @@
                         return value ? decodeURIComponent(value.pop()) : null;
                     },
                     setItem: (key, value) => {
-                        document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${COOKIE_DOMAIN}; max-age=31536000; samesite=lax`;
+                        document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${COOKIE_DOMAIN}; max-age=31536000; SameSite=Lax; Secure`;
                     },
                     removeItem: (key) => {
                         document.cookie = `${key}=; path=/; domain=${COOKIE_DOMAIN}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
