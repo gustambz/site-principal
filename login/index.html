@@ -38,7 +38,7 @@
     <main class="auth-container">
         <section class="auth-column">
             <div class="auth-icon-badge">🪪</div>
-            <h2 class="auth-column-title">Cadastre-se para continuing</h2>
+            <h2 class="auth-column-title">Cadastre-se para continuar</h2>
             <button type="button" class="social-btn-fake fb">Continuar com Facebook</button>
             <button type="button" class="social-btn-fake">🌐 Continuar com Google</button>
             <div class="divider-text">ou preencha os dados abaixo</div>
@@ -116,7 +116,7 @@
             }
         };
 
-        // Mudamos o nome para 'supabaseClient' para evitar conflito com o script global da CDN
+        // Alterado de 'supabase' para 'supabaseClient' para evitar conflito com a global da CDN
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOptions);
 
         // 2. O GANCHO DO CARREGAMENTO TARDIO (A ORDEM CRONOLÓGICA)
@@ -209,7 +209,7 @@
                 alertBox.innerText = `Erro ao salvar dados do perfil: ${profileError.message}`;
                 alertBox.style.display = "block";
                 btn.disabled = false;
-                btn.innerText = "Cadastrar e continuing";
+                btn.innerText = "Cadastrar e continuar";
                 return;
             }
 
