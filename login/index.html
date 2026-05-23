@@ -90,7 +90,7 @@
         const SUPABASE_URL = "https://lcslqpdoidgteihcxjqr.supabase.co";
         const SUPABASE_KEY = "sb_publishable_WnJunLw2RbK4yVjkN2r8IA_j_NWO3El";
 
-        // Ajustado para o domínio de testes locais do seu arquivo hosts (sem protocolo https://)
+        // Ajustado para o domínio de testes locais do seu arquivo hosts
         const COOKIE_DOMAIN = ".meuanalytics.local"; 
 
         const supabaseOptions = {
@@ -104,7 +104,8 @@
                         return value ? decodeURIComponent(value.pop()) : null;
                     },
                     setItem: (key, value) => {
-                        document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${COOKIE_DOMAIN}; max-age=31536000; SameSite=Lax; Secure`;
+                        // Configurado sem "Secure" para aceitar o HTTP local do seu computador
+                        document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${COOKIE_DOMAIN}; max-age=31536000; samesite=lax`;
                     },
                     removeItem: (key) => {
                         document.cookie = `${key}=; path=/; domain=${COOKIE_DOMAIN}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
@@ -116,7 +117,7 @@
             }
         };
 
-        // Corrigido para chamar o construtor global da CDN corretamente
+        // Instância única global do Supabase criada corretamente
         const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY, supabaseOptions);
 
         // 2. O GANCHO DO CARREGAMENTO TARDIO (A ORDEM CRONOLÓGICA)
@@ -135,7 +136,6 @@
                 console.log("Supabase: Usuário Anônimo na carga inicial.");
             }
 
-            // SINAL VERDE MENTAL: O local onde o GTM vai nascer no futuro
             console.log("GTM Liberado para carregar agora!");
 
         }).catch((error) => {
@@ -183,7 +183,6 @@
             btn.innerText = "Processando...";
             alertBox.style.display = "none";
 
-            // Corrigido para usar a constante unificada 'supabase'
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: email,
                 password: password
@@ -200,7 +199,6 @@
 
             const userIdGerado = authData.user.id;
 
-            // Corrigido para usar a constante unificada 'supabase'
             const { error: profileError } = await supabase
                 .from('perfis_alunos')
                 .insert([
@@ -242,7 +240,6 @@
             btn.innerText = "Autenticando...";
             alertBox.style.display = "none";
 
-            // Corrigido para usar a constante unificada 'supabase'
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
